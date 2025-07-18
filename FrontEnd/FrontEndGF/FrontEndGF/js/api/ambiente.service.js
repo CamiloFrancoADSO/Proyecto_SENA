@@ -80,5 +80,53 @@ export const ambienteService = {
             console.error('❌ ambienteService: Error al crear ambiente:', error);
             throw error;
         }
+    },
+
+    /**
+     * Actualiza un ambiente de formación existente
+     * @param {number} ambienteId - ID del ambiente a actualizar
+     * @param {Object} ambienteData - Datos del ambiente a actualizar
+     * @param {string} ambienteData.nombre_ambiente - Nuevo nombre del ambiente
+     * @param {number} ambienteData.num_max_aprendices - Nueva capacidad máxima
+     * @param {string} ambienteData.municipio - Nuevo municipio
+     * @param {string} ambienteData.ubicacion - Nueva ubicación
+     * @returns {Promise<Object>} Respuesta del servidor
+     */
+    updateAmbiente: async (ambienteId, ambienteData) => {
+        try {
+            console.log(`🌐 ambienteService: Actualizando ambiente ${ambienteId}:`, ambienteData);
+            
+            const response = await request(`/ambiente/update/${ambienteId}`, {
+                method: 'PUT',
+                body: JSON.stringify(ambienteData)
+            });
+            
+            console.log('✅ ambienteService: Ambiente actualizado exitosamente:', response);
+            return response;
+        } catch (error) {
+            console.error('❌ ambienteService: Error al actualizar ambiente:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Modifica el estado de un ambiente de formación (activo/inactivo)
+     * @param {number} ambienteId - ID del ambiente a modificar
+     * @returns {Promise<Object>} Respuesta del servidor
+     */
+    modifyStatus: async (ambienteId) => {
+        try {
+            console.log(`🌐 ambienteService: Modificando estado del ambiente ${ambienteId}`);
+            
+            const response = await request(`/ambiente/modify-status/${ambienteId}`, {
+                method: 'PUT'
+            });
+            
+            console.log('✅ ambienteService: Estado del ambiente modificado exitosamente:', response);
+            return response;
+        } catch (error) {
+            console.error('❌ ambienteService: Error al modificar estado del ambiente:', error);
+            throw error;
+        }
     }
 }; 

@@ -14,6 +14,8 @@ const navLinks = document.querySelector('.sidebar-nav');
 const pageNames = {
   dashboard: 'Dashboard',
   usuarios: 'Usuarios',
+  centros: 'Centros de Formación',
+  ambientes: 'Ambientes de Formación',
   billing: 'Billing',
   notifications: 'Notifications',
   profile: 'Perfil',
@@ -60,6 +62,28 @@ const loadContent = async (page) => {
     if (page === 'usuarios') {
       import('./pages/users.js')
         .then(usersModule => usersModule.init());
+    }
+
+    if (page === 'centros') {
+      import('./pages/centros.js')
+        .then(centrosModule => {
+          console.log('Módulo de centros cargado correctamente');
+          centrosModule.init();
+        })
+        .catch(err => {
+          console.error('No se pudo cargar el módulo de centros:', err);
+        });
+    }
+
+    if (page === 'ambientes') {
+      import('./pages/ambientes.js')
+        .then(ambientesModule => {
+          console.log('Módulo de ambientes cargado correctamente');
+          ambientesModule.init();
+        })
+        .catch(err => {
+          console.error('No se pudo cargar el módulo de ambientes:', err);
+        });
     }
     // Puedes agregar más imports dinámicos para otras páginas aquí
 

@@ -5,7 +5,7 @@
 // La importamos para usarla en caso de un error 401.
 import { authService } from './auth.service.js';
 
-const API_BASE_URL = 'https://gestionformacion-prueba.up.railway.app';
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
 /**
  * Cliente central para realizar todas las peticiones a la API.
@@ -16,6 +16,9 @@ const API_BASE_URL = 'https://gestionformacion-prueba.up.railway.app';
 export async function request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = localStorage.getItem('accessToken');
+
+    console.log(`🔗 apiClient: Petición a ${url}`);
+    console.log(`🔑 apiClient: Token disponible: ${token ? 'SÍ' : 'NO'}`);
 
     // Configuramos las cabeceras por defecto
     const headers = {
@@ -29,25 +32,32 @@ export async function request(endpoint, options = {}) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    console.log(`📤 apiClient: Cabeceras:`, headers);
+
     try {
         const response = await fetch(url, { ...options, headers });
+        console.log(`📥 apiClient: Respuesta status: ${response.status}`);
 
         // Manejo centralizado del error 401 (Token inválido/expirado)
         if (response.status === 401) {
+        console.log('🚫 apiClient: Error 401 - Token expirado');
         authService.logout(); // Cerramos la sesión
         return Promise.reject(new Error('Sesión expirada.'));
         }
 
         if (!response.ok) {
+        console.log(`❌ apiClient: Error HTTP ${response.status}`);
         const errorData = await response.json().catch(() => ({ detail: 'Ocurrió un error en la petición.' }));
         throw new Error(errorData.detail);
         }
         
         // Si la respuesta no tiene contenido (ej. status 204), devolvemos un objeto vacío.
-        return response.status === 204 ? {} : await response.json();
+        const result = response.status === 204 ? {} : await response.json();
+        console.log(`✅ apiClient: Respuesta exitosa:`, result);
+        return result;
 
     } catch (error) {
-        console.error(`Error en la petición a ${endpoint}:`, error);
+        console.error(`❌ apiClient: Error en la petición a ${endpoint}:`, error);
         throw error;
     }
 }

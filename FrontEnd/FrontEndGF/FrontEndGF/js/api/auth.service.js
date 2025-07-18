@@ -4,7 +4,7 @@
 export const authService = {
     loginUser: async (username, password) => {
         // La lógica de login se queda igual, ya que es un caso único.
-        const url = 'https://gestionformacion-prueba.up.railway.app/access/token';
+        const url = 'http://127.0.0.1:8000/access/token';
         const body = new URLSearchParams({
             username,
             password,

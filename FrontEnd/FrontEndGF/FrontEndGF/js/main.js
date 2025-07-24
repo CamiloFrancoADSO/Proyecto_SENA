@@ -16,6 +16,7 @@ const pageNames = {
   usuarios: 'Usuarios',
   centros: 'Centros de Formación',
   ambientes: 'Ambientes de Formación',
+  metas: 'Metas del Centro',
   billing: 'Billing',
   notifications: 'Notifications',
   profile: 'Perfil',
@@ -83,6 +84,17 @@ const loadContent = async (page) => {
         })
         .catch(err => {
           console.error('No se pudo cargar el módulo de ambientes:', err);
+        });
+    }
+
+    if (page === 'metas') {
+      import('./pages/metas.js')
+        .then(metasModule => {
+          console.log('Módulo de metas cargado correctamente');
+          metasModule.init();
+        })
+        .catch(err => {
+          console.error('No se pudo cargar el módulo de metas:', err);
         });
     }
     // Puedes agregar más imports dinámicos para otras páginas aquí
